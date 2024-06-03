@@ -2,3 +2,10 @@
 .leaflet-container {
     height: 100%;
   }
+
+.leaflet-touch .leaflet-bar a {
+  font-size: 15px;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+}

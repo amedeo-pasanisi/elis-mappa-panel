@@ -1,8 +1,8 @@
 import { Field, FieldType, PanelPlugin } from '@grafana/data';
 import { MapOptions } from './types';
-import { SimplePanel } from './components/SimplePanel';
+import { MappaPanel } from './components/MappaPanel';
 
-export const plugin = new PanelPlugin<MapOptions>(SimplePanel)
+export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
   .setPanelOptions((builder, context) => {
     builder
       .addFieldNamePicker({
