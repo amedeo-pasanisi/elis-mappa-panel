@@ -11,7 +11,6 @@ import { useTheme2 } from '@grafana/ui'
 
 interface MapPanelProps extends PanelProps<MapOptions> {}
 export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, options }) => {
-    console.log(random())
     const theme = useTheme2()
     const [dots, setDots] = useState<Array<{
         dotCoord: [number, number] | undefined
