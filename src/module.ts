@@ -3,8 +3,20 @@ import { MapOptions } from './types';
 import { MappaPanel } from './components/MappaPanel';
 
 export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
-  .setPanelOptions((builder, context) => {
+  .setPanelOptions((builder) => {
     builder
+      .addNumberInput({
+        path: 'initialLatitude',
+        name: 'Initial Latitude'
+      })
+      .addNumberInput({
+        path: 'initialLongitude',
+        name: 'Initial Longitude'
+      })
+      .addNumberInput({
+        path: 'zoom',
+        name: 'Initial Zoom'
+      })
       .addFieldNamePicker({
         path: `latitude`,
         name: 'Dots latitude field',
