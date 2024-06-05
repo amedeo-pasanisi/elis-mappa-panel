@@ -11,10 +11,11 @@ import { useTheme2 } from '@grafana/ui'
 
 interface MapPanelProps extends PanelProps<MapOptions> {}
 export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, options }) => {
+    console.log(random())
     const theme = useTheme2()
     const [dots, setDots] = useState<Array<{
         dotCoord: [number, number] | undefined
-        tooltipFields: Array<{label: string, fieldValue: string | Array<string>}>
+        tooltipFields: Array<{label: string, fieldValue: string | string[]}>
     }>>([])
     const [geoJSON, setGeoJSON] = useState()
 
@@ -95,7 +96,7 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
                                         {tooltipField.label}:
                                         {Array.isArray(tooltipField.fieldValue) ?
                                             <ul style={{marginLeft: '15px', listStyleType: 'none'}}>
-                                                {tooltipField.fieldValue.map(e => <li>{e}</li>)}
+                                                {tooltipField.fieldValue.map(e => <li key={e}>{e}</li>)}
                                             </ul> :
                                             tooltipField.fieldValue
                                         }
