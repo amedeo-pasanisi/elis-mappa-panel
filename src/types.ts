@@ -14,5 +14,11 @@ export interface MapOptions {
   geoJSONUrl: string | undefined,
   initialLatitude: number | undefined,
   initialLongitude: number | undefined,
-  zoom: number | undefined
+  zoom: number | undefined,
+  tooltipBoldField: string | undefined,
+  bassoText: string | undefined,
+  medioText: string | undefined,
+  altoText: string | undefined,
+  indefinitoText: string | undefined,
+  legendaTooltipText: string | undefined,
 }

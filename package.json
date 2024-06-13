@@ -62,15 +62,19 @@
   },
   "dependencies": {
     "@emotion/css": "11.10.6",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@grafana/data": "10.3.3",
     "@grafana/runtime": "10.3.3",
     "@grafana/schema": "10.3.3",
     "@grafana/ui": "10.3.3",
+    "@mui/material": "^5.15.20",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-leaflet": "^4.2.1",
+    "react-tooltip": "^5.26.4",
     "tslib": "2.5.3"
   },
   "packageManager": "npm@10.5.2"

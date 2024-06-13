@@ -38,6 +38,11 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
         name: 'Tooltip fields',
         description: 'Insert field names separated by commas (case sensitive)',
       })
+      .addFieldNamePicker({
+        path: 'tooltipBoldField',
+        name: 'Tooltip bold field',
+        description: 'Chose wich tooltip field should be bold',
+      })
       .addColorPicker({
         path: 'dotsColor',
         name: 'Dots color',
@@ -69,18 +74,38 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
       .addColorPicker({
         path: 'bassoColor',
         name: 'GeoJSON rischio basso color',
+        defaultValue: 'green',
+      })
+      .addTextInput({
+        path: 'bassoText',
+        name: 'GeoJSON rischio basso text',
       })
       .addColorPicker({
         path: 'medioColor',
         name: 'GeoJSON rischio medio color',
+        defaultValue: 'super-light-orange',
+      })
+      .addTextInput({
+        path: 'medioText',
+        name: 'GeoJSON rischio medio text',
       })
       .addColorPicker({
         path: 'altoColor',
         name: 'GeoJSON rischio alto color',
+        defaultValue: 'red'
+      })
+      .addTextInput({
+        path: 'altoText',
+        name: 'GeoJSON rischio alto text',
       })
       .addColorPicker({
         path: 'indefinitoColor',
         name: 'GeoJSON rischio indefinito color',
+        defaultValue: 'black',
+      })
+      .addTextInput({
+        path: 'indefinitoText',
+        name: 'GeoJSON rischio indefinito text',
       })
       .addSliderInput({
         path: 'geojsonStrokesWeight',
@@ -101,5 +126,10 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
           step: 0.1,
         },
         defaultValue: 0.3
+      })
+      .addTextInput({
+        path: 'legendaTooltipText',
+        name: 'Legenda info text',
+        description: 'To wrap text insert <br/>'
       })
   });
