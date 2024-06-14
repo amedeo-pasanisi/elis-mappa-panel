@@ -33,19 +33,14 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
           noFieldsMessage: 'No numeric fields found',
         },
       })
-      .addTextInput({
-        path: 'tooltipFields',
-        name: 'Tooltip fields',
-        description: 'Insert field names separated by commas (case sensitive)',
-      })
       .addFieldNamePicker({
-        path: 'tooltipBoldField',
-        name: 'Tooltip bold field',
-        description: 'Chose wich tooltip field should be bold',
+        path: 'dotsValuesField',
+        name: 'Dots value field',
+        description: 'Chose a numeric field to assign a value to every dot',
       })
       .addColorPicker({
-        path: 'dotsColor',
-        name: 'Dots color',
+        path: 'dotsDefaultColor',
+        name: 'Dots Default value color',
         defaultValue: '#0C419A',
       })
       .addSliderInput({
@@ -70,6 +65,16 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
       .addTextInput({
         path: 'geoJSONUrl',
         name: 'GeoJSON Url',
+      })
+      .addTextInput({
+        path: 'tooltipFields',
+        name: 'Tooltip fields',
+        description: 'Insert field names separated by commas (case sensitive)',
+      })
+      .addFieldNamePicker({
+        path: 'tooltipBoldField',
+        name: 'Tooltip bold field',
+        description: 'Chose wich tooltip field should be bold',
       })
       .addColorPicker({
         path: 'bassoColor',

@@ -1,5 +1,6 @@
 export interface MapOptions {
-  dotsColor: string | undefined,
+  dotsValuesField: string | undefined,
+  dotsDefaultColor: string | undefined,
   bassoColor: string | undefined,
   medioColor: string | undefined,
   altoColor: string | undefined,
