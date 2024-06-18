@@ -45,6 +45,7 @@
         "bassoColor": "green",
         "bassoText": "range basso",
         "dotsColor": "#0C419A",
+        "dotsDefaultColor": "#0C419A",
         "dotsMaxColor": "#0C419A",
         "dotsMinColor": "#0C419A",
         "dotsOpacity": 0.8,
@@ -58,6 +59,7 @@
         "initialLatitude": 41.662544,
         "initialLongitude": 14.148338,
         "latitude": "A-series",
+        "legendaTitleText": "livello di rischio associato a provincia",
         "legendaTooltipText": "pippo pippo <br/> pippoasghals pippo pippo <br/> pippoasghals pippo pippo <br/> pippoasghalspippo pippo <br/> pippoasghalspippo pippo <br/> pippoasghalspippo pippo <br/> pippoasghals",
         "longitude": "A-series1",
         "medioColor": "super-light-orange",
@@ -65,7 +67,7 @@
         "seriesCountSize": "sm",
         "showSeriesCount": false,
         "text": "Default value of text input option",
-        "tooltipFields": "time",
+        "tooltipFields": "A-series",
         "zoom": 5.9
       },
       "targets": [
@@ -101,6 +103,6 @@
   "timezone": "",
   "title": "Provisioned mappa dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 6,
+  "version": 8,
   "weekStart": ""
 }

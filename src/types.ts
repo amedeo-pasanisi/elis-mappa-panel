@@ -22,4 +22,5 @@ export interface MapOptions {
   altoText: string | undefined,
   indefinitoText: string | undefined,
   legendaTooltipText: string | undefined,
+  legendaTitleText: string | undefined,
 }

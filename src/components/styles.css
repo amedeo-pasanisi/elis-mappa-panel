@@ -36,10 +36,11 @@
 }
 .legendContainer div {
   display: flex;
-  align-items: center;
+  align-items: start;
 }
 .legendContainer img {
-  margin-left: 3px;
+  margin-right: 10px;
+  margin-left: 2px;
   height: 15px;
 }
 

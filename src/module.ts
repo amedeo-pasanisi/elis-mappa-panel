@@ -7,15 +7,15 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
     builder
       .addNumberInput({
         path: 'initialLatitude',
-        name: 'Initial Latitude'
+        name: 'Initial map Latitude'
       })
       .addNumberInput({
         path: 'initialLongitude',
-        name: 'Initial Longitude'
+        name: 'Initial map Longitude'
       })
       .addNumberInput({
         path: 'zoom',
-        name: 'Initial Zoom'
+        name: 'Initial map Zoom'
       })
       .addFieldNamePicker({
         path: `latitude`,
@@ -41,7 +41,18 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
       .addColorPicker({
         path: 'dotsDefaultColor',
         name: 'Dots Default value color',
+        description: 'Default color if the dot value is not defined',
         defaultValue: '#0C419A',
+      })
+      .addTextInput({
+        path: 'tooltipFields',
+        name: 'Tooltip fields',
+        description: 'Insert field names separated by commas (case sensitive)',
+      })
+      .addFieldNamePicker({
+        path: 'tooltipBoldField',
+        name: 'Tooltip bold field',
+        description: 'Chose wich tooltip field should be bold',
       })
       .addSliderInput({
         path: 'dotsRadius',
@@ -66,16 +77,6 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
         path: 'geoJSONUrl',
         name: 'GeoJSON Url',
       })
-      .addTextInput({
-        path: 'tooltipFields',
-        name: 'Tooltip fields',
-        description: 'Insert field names separated by commas (case sensitive)',
-      })
-      .addFieldNamePicker({
-        path: 'tooltipBoldField',
-        name: 'Tooltip bold field',
-        description: 'Chose wich tooltip field should be bold',
-      })
       .addColorPicker({
         path: 'bassoColor',
         name: 'GeoJSON rischio basso color',
@@ -83,7 +84,7 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
       })
       .addTextInput({
         path: 'bassoText',
-        name: 'GeoJSON rischio basso text',
+        name: 'GeoJSON rischio basso legend text',
       })
       .addColorPicker({
         path: 'medioColor',
@@ -92,7 +93,7 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
       })
       .addTextInput({
         path: 'medioText',
-        name: 'GeoJSON rischio medio text',
+        name: 'GeoJSON rischio medio legend text',
       })
       .addColorPicker({
         path: 'altoColor',
@@ -101,7 +102,7 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
       })
       .addTextInput({
         path: 'altoText',
-        name: 'GeoJSON rischio alto text',
+        name: 'GeoJSON rischio alto legend text',
       })
       .addColorPicker({
         path: 'indefinitoColor',
@@ -110,7 +111,7 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
       })
       .addTextInput({
         path: 'indefinitoText',
-        name: 'GeoJSON rischio indefinito text',
+        name: 'GeoJSON rischio indefinito legend text',
       })
       .addSliderInput({
         path: 'geojsonStrokesWeight',
@@ -131,6 +132,11 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
           step: 0.1,
         },
         defaultValue: 0.3
+      })
+      .addTextInput({
+        path: 'legendaTitleText',
+        name: 'Legenda title text',
+        defaultValue: 'Legenda'
       })
       .addTextInput({
         path: 'legendaTooltipText',

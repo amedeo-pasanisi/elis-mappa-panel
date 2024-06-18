@@ -36,26 +36,30 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
             
     useEffect(() => {
         if (geoJSON) {
-            const rischioTypes: Array<(string | undefined)> = []
-            geoJSON.features.forEach(feature => {
-                if (feature?.properties?.rischio && !rischioTypes.includes(feature?.properties?.rischio)) {
-                    rischioTypes.push(feature?.properties?.rischio)
-                }
-            })
-            rischioTypes.push(undefined)
-            const elements = rischioTypes.map(rischioType => {
-                switch (rischioType) {
-                    case 'BASSO':
-                        return {rischio: 'BASSO', color: theme.visualization.getColorByName(options.bassoColor || '') }
-                    case 'MEDIO':
-                        return {rischio: 'MEDIO', color: theme.visualization.getColorByName(options.medioColor || '') }
-                    case 'ALTO':
-                        return {rischio: 'ALTO', color: theme.visualization.getColorByName(options.altoColor || '')}
-                    default:
-                        return {rischio: 'INDEFINITO', color: theme.visualization.getColorByName(options.indefinitoColor || '') }
-                }
-            })
-            setLegendElements(elements)
+            const rischioTypes: Array<string | undefined> = []
+            if (geoJSON.features) {
+                geoJSON.features.forEach(feature => {
+                    if (feature.properties?.rischio && !rischioTypes.includes(feature.properties.rischio)) {
+                        rischioTypes.push(feature.properties.rischio)
+                    }
+                })
+                rischioTypes.push(undefined)
+            } else console.error('Geojson has no features')
+            if (rischioTypes.length > 0) {
+                const elements = rischioTypes.map(rischioType => {
+                    switch (rischioType) {
+                        case 'BASSO':
+                            return {rischio: 'BASSO', color: theme.visualization.getColorByName(options.bassoColor || '') }
+                        case 'MEDIO':
+                            return {rischio: 'MEDIO', color: theme.visualization.getColorByName(options.medioColor || '') }
+                        case 'ALTO':
+                            return {rischio: 'ALTO', color: theme.visualization.getColorByName(options.altoColor || '')}
+                        default:
+                            return {rischio: 'INDEFINITO', color: theme.visualization.getColorByName(options.indefinitoColor || '') }
+                    }
+                })
+                setLegendElements(elements)
+            }
         } else {
             setLegendElements([])
         }
@@ -65,7 +69,6 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
         const fields = data.series.flatMap(item => item.fields)
         const latitudeField = fields.find((field: Field) => field?.name === options.latitude)
         const longitudeField = fields.find((field: Field) => field?.name === options.longitude)
-        console.log('options.dotsValuesField',options.dotsValuesField)
         const valuesField = fields.find((field: Field) => field?.name === options.dotsValuesField)
         console.log('valuesField',valuesField)
         if (
@@ -74,18 +77,29 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
         ) {
             const longitudes: number[] = longitudeField.values.toArray()
             const latitudes: number[] = latitudeField.values.toArray()
-            const dotsValues: number[] | undefined = valuesField?.values.toArray()
+            let dotsValues: (number[] | undefined)
+            if (valuesField) {
+                dotsValues = valuesField.values.toArray()
+            }
+            console.log('DOTSVALUES', dotsValues)
             const coords: Array<[number, number] | undefined> = latitudes.map((latitude, index) => {
                 return (latitude != null && longitudes[index] != null) ? [latitude, longitudes[index]] : undefined
             }) || []
             if (coords.length > 0) {
                 const selectedTooltipFields = options.tooltipFields?.split(',').map(tooltipField => tooltipField.trim()) || []
                 const minDotsValue = dotsValues ? Math.min(...dotsValues.filter(value => value != undefined && !isNaN(value))) : undefined
+                console.log('MIN', minDotsValue)
                 const maxDotsValue = dotsValues ? Math.max(...dotsValues.filter(value => value != undefined && !isNaN(value))) : undefined
+                console.log('MAX', maxDotsValue)
+                console.groupCollapsed('normalizedValues')
                 const dotsData = coords.map((coord, index) => {
-                    const normalizedColorValue = minDotsValue && maxDotsValue && dotsValues ? Math.floor(((dotsValues[index]-minDotsValue) / (maxDotsValue-minDotsValue)) * 150) : undefined
+                    let normalizedColorValue
+                    if (dotsValues && minDotsValue && maxDotsValue) {
+                        normalizedColorValue = (((dotsValues[index]-minDotsValue) / (maxDotsValue-minDotsValue)) * 150)
+                    }
+                    console.log(normalizedColorValue)
                     return {
-                        dotColor: normalizedColorValue ? `hsl(${normalizedColorValue} 100% 49%)` : options.dotsDefaultColor || '',
+                        dotColor: normalizedColorValue || (normalizedColorValue === 0) ? `hsl(${normalizedColorValue} 100% 49%)` : options.dotsDefaultColor || '',
                         dotCoord: coord,
                         tooltipFields: selectedTooltipFields.map(selectedTooltipField => {
                             const field = fields.find(field => field?.name === selectedTooltipField)
@@ -95,10 +109,11 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
                         })
                     }
                 })
+                console.groupEnd()
                 setDots(dotsData)
             }
         }
-    }, [data, data.series, options.latitude, options.longitude, options.tooltipFields, options.dotsValuesField])
+    }, [data, data.series, options.latitude, options.longitude, options.tooltipFields, options.dotsValuesField, options.dotsDefaultColor])
 
     if (data.series.length === 0) {
         return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />
@@ -168,7 +183,8 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
             </MapContainer>
             {legendElements.length !== 0 ? <div className={'legendContainer'} style={{zIndex: 197}}>
                 <div onMouseOver={() => setMouseOver(true)} onMouseLeave={() => setMouseOver(false)} style={{zIndex: 198}}>
-                    Legenda <img src={svgInfoIcon} alt="info icon" className="infoIcon" data-tooltip-place="top" style={{zIndex: 199}}/>
+                    <img src={svgInfoIcon} alt="info icon" className="infoIcon" data-tooltip-place="top" style={{zIndex: 199}}/>
+                    <div style={{maxWidth: '150px', textWrap: 'wrap'}}>{options.legendaTitleText}</div>
                 </div>
                 <ReactTooltip isOpen={mouseOver} place="top" style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', backgroundColor: 'white', color: '#555', zIndex: 200}} className="reactTooltip" anchorSelect=".infoIcon">
                     {options.legendaTooltipText?.split('<br/>').map((text, index) => <div key={`${index}_${text}`}>{text}</div>)}
