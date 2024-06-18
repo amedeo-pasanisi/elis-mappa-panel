@@ -39,6 +39,16 @@ export const plugin = new PanelPlugin<MapOptions>(MappaPanel)
         description: 'Chose a numeric field to assign a value to every dot',
       })
       .addColorPicker({
+        path: 'dotsMinValueColor',
+        name: 'Dots minimum value color',
+        defaultValue: 'red',
+      })
+      .addColorPicker({
+        path: 'dotsMaxValueColor',
+        name: 'Dots maximum value color',
+        defaultValue: 'green',
+      })
+      .addColorPicker({
         path: 'dotsDefaultColor',
         name: 'Dots Default value color',
         description: 'Default color if the dot value is not defined',

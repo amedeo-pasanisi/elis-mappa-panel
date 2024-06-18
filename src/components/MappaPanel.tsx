@@ -1,6 +1,6 @@
 import "./styles.css"
 import "leaflet/dist/leaflet.css"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Field, FieldType, PanelProps } from '@grafana/data'
 import { MapOptions } from 'types'
 import { PanelDataErrorView } from '@grafana/runtime'
@@ -11,6 +11,7 @@ import type { FeatureCollection } from 'geojson';
 import svgInfoIcon from './info.svg'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
+import Color from "colorjs.io"
 
 interface MapPanelProps extends PanelProps<MapOptions> {}
 export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, options }) => {
@@ -23,6 +24,14 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
     const [geoJSON, setGeoJSON] = useState<FeatureCollection>()
     const [legendElements, setLegendElements] = useState<Array<{rischio: string | undefined, color: string}>>([])
     const [mouseOver, setMouseOver] = useState(false)
+
+    const takeColorFromRange = useMemo(() => {
+        const minColor = theme.visualization.getColorByName(options.dotsMinValueColor || '')
+        const maxColor = theme.visualization.getColorByName(options.dotsMaxValueColor || '')
+        let c1 = new Color(minColor);
+        let c2 = new Color(maxColor)
+        return c1.range(c2, {space: "hwb"})
+    }, [options.dotsMaxValueColor, options.dotsMinValueColor, theme.visualization])
 
     useEffect(() => {
         if (options.geoJSONUrl) {
@@ -44,7 +53,7 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
                     }
                 })
                 rischioTypes.push(undefined)
-            } else console.error('Geojson has no features')
+            } else {console.error('Geojson has no features')}
             if (rischioTypes.length > 0) {
                 const elements = rischioTypes.map(rischioType => {
                     switch (rischioType) {
@@ -67,9 +76,16 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
 
     useEffect(() => {
         const fields = data.series.flatMap(item => item.fields)
+        console.log('FIELDS', fields)
         const latitudeField = fields.find((field: Field) => field?.name === options.latitude)
         const longitudeField = fields.find((field: Field) => field?.name === options.longitude)
-        const valuesField = fields.find((field: Field) => field?.name === options.dotsValuesField)
+        console.groupCollapsed('FIELDNAME-OPTIONSVALUEFIELD')
+        const valuesField = fields.find((field: Field) => {
+            console.log('field?.name', field?.name)
+            console.log('dotsValuesField', options.dotsValuesField)
+            return field?.name === options.dotsValuesField
+        })
+        console.groupEnd()
         console.log('valuesField',valuesField)
         if (
             latitudeField?.type === FieldType.number &&
@@ -77,14 +93,17 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
         ) {
             const longitudes: number[] = longitudeField.values.toArray()
             const latitudes: number[] = latitudeField.values.toArray()
+            const coords: Array<[number, number] | undefined> = latitudes.map((latitude, index) => {
+                return (latitude != null && longitudes[index] != null) ? [latitude, longitudes[index]] : undefined
+            }) || []
             let dotsValues: (number[] | undefined)
             if (valuesField) {
                 dotsValues = valuesField.values.toArray()
             }
             console.log('DOTSVALUES', dotsValues)
-            const coords: Array<[number, number] | undefined> = latitudes.map((latitude, index) => {
-                return (latitude != null && longitudes[index] != null) ? [latitude, longitudes[index]] : undefined
-            }) || []
+            console.log('DOTSVALUESLENGTH', dotsValues?.length)
+            console.log('COORDS', coords)
+            console.log('COORDSLENGTH', coords?.length)
             if (coords.length > 0) {
                 const selectedTooltipFields = options.tooltipFields?.split(',').map(tooltipField => tooltipField.trim()) || []
                 const minDotsValue = dotsValues ? Math.min(...dotsValues.filter(value => value != undefined && !isNaN(value))) : undefined
@@ -94,12 +113,21 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
                 console.groupCollapsed('normalizedValues')
                 const dotsData = coords.map((coord, index) => {
                     let normalizedColorValue
-                    if (dotsValues && minDotsValue && maxDotsValue) {
-                        normalizedColorValue = (((dotsValues[index]-minDotsValue) / (maxDotsValue-minDotsValue)) * 150)
+                    let dotColor = options.dotsDefaultColor || ''
+                    if (dotsValues && minDotsValue != null && maxDotsValue != null && !isNaN(minDotsValue) && !isNaN(maxDotsValue)) {
+                        normalizedColorValue = (dotsValues[index]-minDotsValue) / (maxDotsValue-minDotsValue)
+                        console.log('coordinata', coord)
+                        console.log('index', index)
+                        console.log('dotsValues[index]', dotsValues[index])
+                        console.log('normalizedColorValue',normalizedColorValue)
+                        if (!dotsValues[index]) {
+                            dotColor = options.dotsDefaultColor || ''
+                        } else {
+                            dotColor = normalizedColorValue || (normalizedColorValue === 0) ? takeColorFromRange(normalizedColorValue).toString() :  options.dotsDefaultColor || ''
+                        }
                     }
-                    console.log(normalizedColorValue)
                     return {
-                        dotColor: normalizedColorValue || (normalizedColorValue === 0) ? `hsl(${normalizedColorValue} 100% 49%)` : options.dotsDefaultColor || '',
+                        dotColor: dotColor,
                         dotCoord: coord,
                         tooltipFields: selectedTooltipFields.map(selectedTooltipField => {
                             const field = fields.find(field => field?.name === selectedTooltipField)
@@ -113,7 +141,7 @@ export const MappaPanel: React.FC<MapPanelProps> = ({ data, fieldConfig, id, opt
                 setDots(dotsData)
             }
         }
-    }, [data, data.series, options.latitude, options.longitude, options.tooltipFields, options.dotsValuesField, options.dotsDefaultColor])
+    }, [data, data.series, options.latitude, options.longitude, options.tooltipFields, options.dotsValuesField, options.dotsDefaultColor, takeColorFromRange])
 
     if (data.series.length === 0) {
         return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />

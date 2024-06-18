@@ -48,9 +48,9 @@
         "dotsDefaultColor": "#0C419A",
         "dotsMaxColor": "#0C419A",
         "dotsMinColor": "#0C419A",
-        "dotsOpacity": 0.8,
-        "dotsRadius": 4,
-        "dotsValuesField": "A-series",
+        "dotsOpacity": 1,
+        "dotsRadius": 7,
+        "dotsValuesField": "A-series1",
         "geoJSONUrl": "http://10.2.0.5:9003/terna-static-data/province_con_rischio.geojson",
         "geojsonOpacity": 0.3,
         "geojsonStrokesWeight": 1.5,
@@ -68,7 +68,7 @@
         "showSeriesCount": false,
         "text": "Default value of text input option",
         "tooltipFields": "A-series",
-        "zoom": 5.9
+        "zoom": 2
       },
       "targets": [
         {
@@ -103,6 +103,6 @@
   "timezone": "",
   "title": "Provisioned mappa dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 8,
+  "version": 4,
   "weekStart": ""
 }

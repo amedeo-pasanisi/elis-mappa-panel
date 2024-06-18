@@ -36,7 +36,7 @@
 }
 .legendContainer div {
   display: flex;
-  align-items: start;
+  align-items: center;
 }
 .legendContainer img {
   margin-right: 10px;
